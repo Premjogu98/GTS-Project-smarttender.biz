@@ -22,41 +22,46 @@ def scrap_data(browser,details,get_htmlSource):
     a = True
     while a == True:
         try:
-            Email = get_htmlSource_for_details.partition('e-mail:')[2].partition("</a>")[0].strip()
-            Email = Email.partition('mailto:')[2].partition('"')[0].strip().replace(';',' , ')
-            Email_regex = re.findall("([a-zA-Z0-9_.+-]+@[a-zA-Z0-9_.+-]+\.[a-zA-Z]+)", Email)
-            try:
-                SegField[1] = Email_regex[0].lower()
-            except:
-                SegField[1] = ''
+            if details[6] != 'NO EMAIL':
+                SegField[1] = details[6]
             
             for Purchaser in browser.find_elements_by_xpath('//*[@id="organizer-poptip"]/div/a'):
                 Purchaser = Purchaser.get_attribute('innerText').strip()
                 SegField[12] = Purchaser
                 break
+            Address = ''
+            if details[9] != 'NO REGION':
+                region = details[9]
+                Address += f'{region}'
 
-            Contact_details_outerhtml = get_htmlSource_for_details.partition('ПІБ</span>')[2].partition("</li>")[0].strip()
-            Contact_details_outerhtml = Contact_details_outerhtml.partition('">')[2].partition("</span>")[0].strip()
-            Contact_name = Contact_details_outerhtml.partition('<span>')[2].strip()
-            Contact_name = re.sub('\s+', ' ', Contact_name)
+            if details[7] != 'NO NAME':
+                Contact_name = details[7]
+                Address += f'<br>\n{Contact_name}'
+                
+            if details[8] != 'NO PHONE':
+                Phone = details[8]
+                Address += f'<br>\nPhone: {Phone}'
 
-            Phone = get_htmlSource_for_details.partition('Телефон:')[2].partition("</a>")[0].strip()
-            Phone = Phone.partition('">')[2].strip()
-            Address = f'{Contact_name}<br>\nPhone: {Phone}<br>\nEmail: {SegField[1]}'
+            USREOU = ''
+            if details[11] != 'NO USREOU':
+                USREOU = details[11]
+                Address += f'<br>\nUSREOU: {USREOU}'
+                
             SegField[2] = Address
 
             SegField[13] = details[3]
-   
+
+            if details[10] != 'NO SITE':
+                SegField[8] = details[10]
+
             SegField[19] = details[2]
+
             if str(details[4]) != 'NO DEADLINE':
                 datetime_object = datetime.strptime(str(details[4]), '%d.%m.%Y %H:%M')
                 Deadline = datetime_object.strftime("%Y-%m-%d")
                 SegField[24] = Deadline
 
-            
-            USREOU = get_htmlSource_for_details.partition('ЄДРПОУ</span>')[2].partition("</span>")[0].strip()
-            USREOU = USREOU.partition('<span>')[2].strip()
-            
+
             Category = get_htmlSource_for_details.partition('Категорія</span>')[2].partition("</span>")[0].strip()
             Category = Category.partition('<span>')[2].strip()
 
@@ -66,10 +71,11 @@ def scrap_data(browser,details,get_htmlSource):
             Tender_currency = get_htmlSource_for_details.partition('Валюта тендера</span>')[2].partition("</span>")[0].strip()
             Tender_currency = Tender_currency.partition('<span>')[2].strip()
             
-            SegField[18] = f"{str(SegField[19])}<br>\nЄДРПОУ: {USREOU}<br>\nКатегорія: {Category}<br>\nФорма проведення торгів: {Form_of_bidding}<br>\nВалюта тендера: {Tender_currency}"
+            SegField[18] = f"{str(details[2])}<br>\nЄДРПОУ: {USREOU}<br>\nКатегорія: {Category}<br>\nФорма проведення торгів: {Form_of_bidding}<br>\nВалюта тендера: {Tender_currency}"
 
             SegField[28] = details[1]
-
+            Category = Category.partition(' ')[2].strip()
+            SegField[29] = Category
             SegField[31] = 'smarttender.biz'
             SegField[7] = "UA"
             SegField[14] = '2'
@@ -80,6 +86,32 @@ def scrap_data(browser,details,get_htmlSource):
                     SegField[21] = "UAH" 
             SegField[42] = SegField[7]
             SegField[43] = ""
+            
+            if Category != "":
+                copy_cpv = ""
+                Cpv_status = True
+                all_string = ""
+                try:
+                    while Cpv_status == True:
+                        phoneNumRegex = re.compile(r'\d\d\d\d\d\d\d\d-')
+                        CPv_main = phoneNumRegex.search(Category)
+                        mainNumber = CPv_main.groups()
+                        if CPv_main:
+                            copy_cpv = CPv_main.group(), ", "
+                            Category = Category.replace(CPv_main.group(), "")
+                        else:
+                            Cpv_status = False
+                        result = "".join(str(x) for x in copy_cpv)
+                        result = result.replace("-", "").strip()
+                        result2 = result.replace("\n", "")
+                        # print(result2)
+                        all_string += result2.strip(",")
+                except:
+                    pass
+                print(all_string.strip(","))
+                SegField[36] = all_string
+            else:
+                SegField[36] = ""
             for SegIndex in range(len(SegField)):
                 print(SegIndex, end=' ')
                 print(SegField[SegIndex])

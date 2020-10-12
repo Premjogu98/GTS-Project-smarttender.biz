@@ -57,6 +57,68 @@ def ChromeDriver():
                     detail_list.append(Amount_text)
                 else:
                     detail_list.append('NO AMOUNT')
+
+                try:
+                    email = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-email"]')
+                    email_text = email[list_count].get_attribute('innerText').strip()
+                    if email_text != '':
+                        detail_list.append(email_text)
+                    else:
+                        detail_list.append('NO EMAIL')
+                except:
+                    detail_list.append('NO EMAIL')
+
+                try:
+                    organizer_name = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-name"]')
+                    organizer_name_text = organizer_name[list_count].get_attribute('innerText').strip()
+                    if organizer_name_text != '':
+                        detail_list.append(organizer_name_text)
+                    else:
+                        detail_list.append('NO NAME')
+                except:
+                    detail_list.append('NO NAME')
+
+                try:
+                    phone = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-phone"]')
+                    phone_text = phone[list_count].get_attribute('innerText').strip()
+                    if phone_text != '':
+                        detail_list.append(phone_text)
+                    else:
+                        detail_list.append('NO PHONE')
+                except:
+                    detail_list.append('NO PHONE')
+
+                try:
+                    region = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-region"]')
+                    region_text = region[list_count].get_attribute('innerText').strip()
+                    if region_text != '':
+                        region_text = region_text.partition(':')[2].strip()
+                        detail_list.append(region_text)
+                    else:
+                        detail_list.append('NO REGION')
+                except:
+                    detail_list.append('NO REGION')
+
+                try:
+                    site = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-site"]/a')
+                    site_text = site[list_count].get_attribute('href').strip()
+                    if site_text != '':
+                        detail_list.append(site_text)
+                    else:
+                        detail_list.append('NO SITE')
+                except:
+                    detail_list.append('NO SITE')
+
+                try:
+                    usreou = browser.find_elements_by_xpath('//*[@data-qa="commercial-trade-organizer-usreou"]')
+                    usreou_text = usreou[list_count].get_attribute('innerText').strip()
+                    if usreou_text != '':
+                        usreou_text = usreou_text.partition(':')[2].strip()
+                        detail_list.append(usreou_text)
+                    else:
+                        detail_list.append('NO USREOU')
+                except:
+                    detail_list.append('NO USREOU')
                 tender_details_list.append(detail_list)
                 list_count +=1
             else:
