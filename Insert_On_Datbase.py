@@ -87,10 +87,10 @@ def insert_in_Local(get_htmlSource , SegFeild):
     while MyLoop == 0:
         mydb = DB_connection()
         mycursor = mydb.cursor()
-        sql = "INSERT INTO ukrain_tenders_tbl(Tender_ID, EMail,add1,Country,Maj_Org,tender_notice_no,notice_type,Tenders_details,short_desc,est_cost,currency,doc_cost,doc_last,earnest_money,Financier,tender_doc_file,source,Sector)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
+        sql = "INSERT INTO ukrain_tenders_tbl(Tender_ID, EMail,add1,Country,Maj_Org,tender_notice_no,notice_type,Tenders_details,short_desc,est_cost,currency,doc_cost,doc_last,earnest_money,Financier,tender_doc_file,source,Sector,cpv)VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)"
         val= (str(Fileid) , str(SegFeild[1]) , str(SegFeild[2]) , str(SegFeild[7]) , str(SegFeild[12]) , str(SegFeild[13]) , str(SegFeild[14]),
                 str(SegFeild[18]) , str(SegFeild[19]) , str(SegFeild[20]) , str(SegFeild[21]) , str(SegFeild[22]), str(SegFeild[24]),str(SegFeild[26]) ,str(SegFeild[27]),
-                str(SegFeild[28]) , str(SegFeild[31]), str(SegFeild[29]))
+                str(SegFeild[28]) , str(SegFeild[31]), str(SegFeild[29]), str(SegFeild[36]))
         try:
             mycursor.execute(sql , val)
             mydb.commit()
