@@ -23,7 +23,7 @@ def scrap_data(browser,details,get_htmlSource):
     while a == True:
         try:
             if details[6] != 'NO EMAIL':
-                SegField[1] = details[6]
+                SegField[1] = details[6].lower()
             
             for Purchaser in browser.find_elements_by_xpath('//*[@id="organizer-poptip"]/div/a'):
                 Purchaser = Purchaser.get_attribute('innerText').strip()
@@ -74,8 +74,7 @@ def scrap_data(browser,details,get_htmlSource):
             SegField[18] = f"{str(details[2])}<br>\nЄДРПОУ: {USREOU}<br>\nКатегорія: {Category}<br>\nФорма проведення торгів: {Form_of_bidding}<br>\nВалюта тендера: {Tender_currency}"
 
             SegField[28] = details[1]
-            Category = Category.partition(' ')[2].strip()
-            SegField[29] = Category
+
             SegField[31] = 'smarttender.biz'
             SegField[7] = "UA"
             SegField[14] = '2'
