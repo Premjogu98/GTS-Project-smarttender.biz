@@ -37,19 +37,23 @@ def ChromeDriver():
 
                 tender_href_text = tender_detail[list_count].get_attribute('innerText').strip()
                 detail_list.append(tender_href_text)
-                
-                tender_id = browser.find_elements_by_xpath('//*[@class="padding-top-15 trade-number"]')
-                tender_id = tender_id[list_count].get_attribute('innerText').strip()
-                tender_id_text = tender_id.partition("№")[2].partition(".")[0]
-                detail_list.append(tender_id_text)
+                try:
+                    tender_id = browser.find_elements_by_xpath('//*[@class="padding-top-15 trade-number"]')
+                    tender_id = tender_id[list_count].get_attribute('innerText').strip()
+                    tender_id_text = tender_id.partition("№")[2].partition(".")[0]
+                    detail_list.append(tender_id_text)
+                except:
+                     detail_list.append('NO Tender ID')
 
-                deadline = browser.find_elements_by_xpath('//*[@class="trade-status-date"]')
-                deadline_text = deadline[list_count].get_attribute('innerText').replace('до','').strip()
-                if deadline_text != '':
-                    detail_list.append(deadline_text)
-                else:
+                try:
+                    deadline = browser.find_elements_by_xpath('//*[@class="trade-status-date"]')
+                    deadline_text = deadline[list_count].get_attribute('innerText').replace('до','').strip()
+                    if deadline_text != '':
+                        detail_list.append(deadline_text)
+                    else:
+                        detail_list.append('NO DEADLINE')
+                except:
                     detail_list.append('NO DEADLINE')
-
                 Amount = browser.find_elements_by_xpath('//*[@class="trade-initial-rate text-center"]')
                 Amount_text = Amount[list_count].get_attribute('innerText').strip()
                 if 'Бюджет' not in Amount_text:
