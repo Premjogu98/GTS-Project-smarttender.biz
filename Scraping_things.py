@@ -57,11 +57,17 @@ def scrap_data(browser,details,get_htmlSource):
             SegField[19] = details[2]
 
             if str(details[4]) != 'NO DEADLINE':
-                datetime_object = datetime.strptime(str(details[4]), '%d.%m.%Y %H:%M')
-                Deadline = datetime_object.strftime("%Y-%m-%d")
-                SegField[24] = Deadline
-
-
+                try:
+                    datetime_object = datetime.strptime(str(details[4]), '%d.%m.%Y %H:%M')
+                    Deadline = datetime_object.strftime("%Y-%m-%d")
+                    SegField[24] = Deadline
+                except:
+                    try:
+                        datetime_object = datetime.strptime(str(details[4]), '%d.%m.%Y')
+                        Deadline = datetime_object.strftime("%Y-%m-%d")
+                        SegField[24] = Deadline
+                    except:pass
+                
             Category = get_htmlSource_for_details.partition('Категорія</span>')[2].partition("</span>")[0].strip()
             Category = Category.partition('<span>')[2].strip()
 
